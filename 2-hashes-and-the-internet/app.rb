@@ -1,3 +1,4 @@
+# Require allows us to pull in code from a gem into this file
 require "rest-client"
 require "pry"
 require "json"
@@ -18,7 +19,7 @@ def get_books(response)
   response["items"]
 end
 
-# Get the title for a book
+# Get the title for a given book
 def get_title(book)
   book["volumeInfo"]["title"]
 end
@@ -30,6 +31,7 @@ def print_all_titles(books)
   end
 end
 
+# Run method - uses the other methods we've created to run our app
 def run
   search_term = get_search_term
   response = make_request(search_term)
