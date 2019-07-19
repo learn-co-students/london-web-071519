@@ -1,3 +1,4 @@
+# Require any gems and files here so that we only need to pull this one file into our run file
 require "pry"
 # Bundler.require
 # require_all "app"
