@@ -19,6 +19,7 @@
 ## Query examples
 
 1. Write the SQL to return all of the rows in the artists table?
+
 ```SQL
   select * from artists;
 ```
@@ -56,7 +57,6 @@
       169
     );
 ```
-
 
 7. Write the SQL to return fans that are not fans of the black eyed peas.
 
