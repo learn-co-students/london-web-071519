@@ -1,0 +1,7 @@
+require_relative './config/environment'
+require 'sinatra/activerecord/rake' # This gives us access to all the Rake commands we need for Active Record e.g. rake db:create_migration and rake db:migrate
+
+desc "Start our app console"
+task :console do # An example of a Rake task. The task is called console and will call Pry.start, so if I type rake console into the terminal, it will start a Pry session.
+  Pry.start
+end
