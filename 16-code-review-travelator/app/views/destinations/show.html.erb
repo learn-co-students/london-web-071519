@@ -1,0 +1,9 @@
+<h1><%= @destination.name %></h1>
+
+<ul>
+<% @destination.posts.max(5).each do |post| %>
+    <li><%= post.title %></li>
+<% end %>
+</ul>
+
+<p>Average Blogger Age: <%= @destination.bloggers.uniq.sum {|blogger| blogger.age }/@destination.bloggers.count %></p>
