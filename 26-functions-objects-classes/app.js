@@ -5,6 +5,8 @@
 //   score: 4,
 //   increment: function() {
 //     user1.score++;
+//     // impure function (just side effects)
+//     return user1.score;
 //   }
 // };
 
@@ -53,27 +55,27 @@
 // we also are creating a copy of the functions attached
 // solution is to use the prototype chain
 
-// const parentUserObject = {
-//   increment: function() {
-//     this.score++;
-//   },
-//   login: function() {
-//     console.log("you have been logged in");
-//   },
-//   type: "not admin"
-// };
+const parentUserObject = {
+  increment: function() {
+    this.score++;
+  },
+  login: function() {
+    console.log("you have been logged in");
+  },
+  type: "not admin"
+};
 
-// function userCreator(name, score) {
-//   const newUser = Object.create(parentUserObject);
-//   newUser.name = name;
-//   newUser.score = score;
-//   return newUser;
-// }
+function userCreator(name, score) {
+  const newUser = Object.create(parentUserObject);
+  newUser.name = name;
+  newUser.score = score;
+  return newUser;
+}
 
-// const user1 = userCreator("phil", 4);
-// user1.type = "admin";
-// const user2 = userCreator("James", 2);
-// // // user1.increment === user2.increment
+const user1 = userCreator("phil", 4);
+user1.type = "admin";
+const user2 = userCreator("James", 2);
+console.log(user1.increment === user2.increment);
 
 // in this solution , we explicitly are creating an object
 // that gets access to the functions we defined in the store
@@ -82,21 +84,23 @@
 // but there's a better way to do it, and it's using the
 // `new` keyword
 
-// function UserCreator(name, score) {
-//   this.name = name;
-//   this.score = score;
-// }
+function User(name, score) {
+  this.name = name;
+  this.score = score;
+}
 
-// UserCreator.prototype.increment = function() {
-//   this.score++;
-// };
+User.prototype.increment = function() {
+  this.score++;
+};
 
-// UserCreator.prototype.login = function() {
-//   console.log("login");
-// };
+User.prototype.login = function() {
+  console.log("login");
+};
 
-// const user1 = new UserCreator("Eva", 9);
-// const user2 = new UserCreator("James", 2);
+User.prototype.type = "not admin";
+
+const user1 = new User("Eva", 9);
+const user2 = new User("James", 2);
 
 // // this is faster to write and a bit cleaner
 // // it is still the industry standard way of doing it
@@ -129,23 +133,23 @@
 
 // // solution - => lexical binding of arrow functions
 
-// function UserCreator(name, score) {
-//   this.name = name;
-//   this.score = score;
-// }
+function UserCreator(name, score) {
+  this.name = name;
+  this.score = score;
+}
 
-// UserCreator.prototype.increment = function() {
-//   const add1 = () => {
-//     this.score++;
-//   };
-//   add1();
-// };
+UserCreator.prototype.increment = function() {
+  const add1 = () => {
+    this.score++;
+  };
+  add1();
+};
 
-// UserCreator.prototype.login = function() {
-//   console.log("login");
-// };
+UserCreator.prototype.login = function() {
+  console.log("login");
+};
 
-// const user1 = new UserCreator("Eva", 9);
+const user1 = new UserCreator("Eva", 9);
 
 // ----------------------------------------------
 
@@ -156,12 +160,11 @@ class UserCreator {
     this.name = name;
     this.score = score;
   }
+
   increment = () => {
-    const add1 = () => {
-      this.score++;
-    };
-    add1();
+    this.score++;
   };
+
   login = () => {
     console.log("login");
   };
@@ -169,9 +172,9 @@ class UserCreator {
 
 const user1 = new UserCreator("Eva", 9);
 
-// // good stuff: nice and clean, resembling other
-// // languages syntactically, therefore more readable
+// good stuff: nice and clean, resembling other
+// languages syntactically, therefore more readable
 
-// // bad stuff: it's basically a lie, js has no
-// // classes and all inheritance is prototypical
-// // a big GOTCHA on js interviews
+// bad stuff: it's basically a lie, js has no
+// classes and all inheritance is prototypical
+// a big GOTCHA on js interviews
