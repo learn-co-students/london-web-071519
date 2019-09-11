@@ -1,0 +1,24 @@
+{
+  "name": "27-intro-to-node",
+  "version": "1.0.0",
+  "description": "this is a lecture",
+  "main": "index.js",
+  "scripts": {
+    "dev": "node_modules/nodemon/bin/nodemon.js index.js --port=3000"
+  },
+  "repository": {
+    "type": "git",
+    "url": "none"
+  },
+  "keywords": [
+    "none"
+  ],
+  "author": "daniel",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.17.1"
+  },
+  "devDependencies": {
+    "nodemon": "^1.19.2"
+  }
+}
