@@ -1,68 +1,172 @@
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+# Intro to JSX
 
-## Available Scripts
+## JS so far
 
-In the project directory, you can run:
+## Brief History/Context
 
-### `npm start`
+React is made by Facebook. I like to point out that if anyone's ever heard about the licensing thing (i.e. you can't build an app that competes with FB in React) that's no longer true and React uses the MIT open source license. There are two libraries `react`, `react-dom`, this is to divide up the functionality and enables `react-native`, `react-vr`, etc.
 
-Runs the app in the development mode.<br>
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+## Project Set Up
 
-The page will reload if you make edits.<br>
-You will also see any lint errors in the console.
+In index.js
+`ReactDOM.render` take two args:
 
-### `npm test`
+```js
+ReactDOM.render(whatToAddToDOM, whereToPutIt);
+```
 
-Launches the test runner in the interactive watch mode.<br>
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+Demonstrate that the second arg is the **only place we will be using code from mod 3 such as `document.getElementById('main')`**. This is also why we won't be bringing in jQuery. It'd be overkill to import a huge library to run one line of code `$('#main')`
 
-### `npm run build`
+whatToAddToDOM: we need to add a React Element! First thing I'd do is to write like:
 
-Builds the app for production to the `build` folder.<br>
-It correctly bundles React in production mode and optimizes the build for the best performance.
+```js
+ReactDOM.render(React.createElement('h1'), document.getElementById('main'));
+```
 
-The build is minified and the filenames include the hashes.<br>
-Your app is ready to be deployed!
+And inspect the HTML, an h1 will be there, but we won't see any text. Change it to:
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+```js
+ReactDOM.render(
+  React.createElement('h1', {}, 'hello'),
+  document.getElementById('main')
+);
+```
 
-### `npm run eject`
+And we'll see it on the page!
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+## Briefly on Virtual DOM
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+Put a debugger and look what `React.createElement` returns. Ask what that looks like: an object-- that's it! That's what the Virtual DOM is, a plain JS object that builds up a picture of what the real DOM should look like. Reminder: html is just a string, the DOM is a _representation_ of that string we can interact with programmatically, ask questions to, etc. Virtual DOM is a representation of that representation. React will be in charge of making sure the real DOM looks like and will always be in sync with the virtual DOM. Declarative vs. Imperative.
 
-Instead, it will copy all the configuration files and the transitive dependencies (Webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
+## myCreateElement
 
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
+If `React.createElement` just returns an object we should be able to write this on our own. Here's the bare minimum needed. (Refs we wont talk about today, symbols they maybe haven't seen (but they're basically just like Ruby symbols), and we'll talk more about props soon)
 
-## Learn More
+```js
+const myCreateElement = (type, props = {}, children) => {
+  return {
+    $$typeof: Symbol.for('react.element'),
+    type: type,
+    props: { children: children },
+    ref: null
+  };
+};
+```
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+Use your function instead of React's. Cool!
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+Now present the problem of wanting to create an "Article", i.e. some type of title in an h1, followed by the text in a p tag. How can we do this?
 
-### Code Splitting
+Someone should know that you'll have to wrap the whole thing in another element such as a div. Point out that this isn't like a React thing its just a programming thing. CreateElement is a function that returns an object. You can't return 2 things from a function. Talk through children being an array (not nested nodes, but siblings)
 
-This section has moved here: https://facebook.github.io/create-react-app/docs/code-splitting
+```js
+ReactDOM.render(
+  myCreateElement('div', {}, [
+    myCreateElement('h1', {}, 'My Title'),
+    myCreateElement('p', {}, 'some text of article')
+  ]),
+  document.getElementById('main')
+);
+```
 
-### Analyzing the Bundle Size
+Refactor to a function:
 
-This section has moved here: https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size
+```js
+const Article = props => {
+  return myCreateElement('div', {}, [
+    myCreateElement('h1', {}, props.title),
+    myCreateElement('p', {}, props.text)
+  ]);
+};
 
-### Making a Progressive Web App
+ReactDOM.render(
+  Article({ title: 'Title', text: 'some text' }),
+  document.getElementById('main')
+);
+```
 
-This section has moved here: https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app
+What if you wanted to add a CSS class. Why can't we use the keyword 'class'. Make sure to change myCreateElement to merge in props. Talk about ES2015 all the time.
 
-### Advanced Configuration
+```js
+const myCreateElement = (type, props = {}, children) => {
+  return {
+    $$typeof: Symbol.for('react.element'),
+    type: type,
+    props: { ...props, children: children },
+    ref: null
+  };
+};
 
-This section has moved here: https://facebook.github.io/create-react-app/docs/advanced-configuration
+const Article = props => {
+  // show how we'll see this in the HTML
+  // virtual dom = picture of what html should look like
+  return myCreateElement('div', { className: 'article' }, [
+    myCreateElement('h1', { className: 'header' }, props.title),
+    myCreateElement('p', { className: 'body' }, props.text)
+  ]);
+};
+```
 
-### Deployment
+## Navbar Student Exercise
 
-This section has moved here: https://facebook.github.io/create-react-app/docs/deployment
+```html
+<div class="ui inverted orange menu">
+  <a class='item'>
+    <h2 class="ui header">
+      <i class="paw icon"></i>
+      <div class="content">
+        ZooKeepr
+      </div>
+      <div class="sub header">
+        Keep track of your animals
+      </div>
+    </h2>
+  </a>
+</div>
+```
 
-### `npm run build` fails to minify
+Student Task: write a function called Navbar I would expect to be used like this:
 
-This section has moved here: https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify
+```js
+const Navbar = props => {
+  // ...
+};
+
+ReactDOM.render(
+  Navbar({
+    title: 'ZooKeepr',
+    icon: 'paw',
+    color: 'green',
+    description: 'keep track of your animals'
+  }),
+  document.getElementById('main')
+);
+```
+
+### JSX
+
+Ok cool, but if this was how we had to write React it would not be the popular framework it is.
+
+Here's the same code example, using JSX:
+
+```jsx
+const NavBar = props =>
+  <div className={`ui inverted ${props.color} menu`}>
+    <a className='item'>
+      <h2 className="ui header">
+        <i className={`${props.icon} icon`}></i>
+        <div className="content">
+          {props.title}
+        </div>
+        <div className="sub header">
+          {props.subtitle.toUpperCase()}
+        </div>
+        {
+          props.names.map((name, idx) => <li key={idx}>{name}</li>)
+        }
+      </h2>
+    </a>
+  </div>
+```
+
+Compare `{}` in JSX to ERB. They mean "evaluate this as JavaScript". `<h1>props.title</h1>` vs. `<h1>{props.title}</h1>`
