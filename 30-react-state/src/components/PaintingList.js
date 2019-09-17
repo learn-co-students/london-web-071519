@@ -50,10 +50,16 @@ class PaintingList extends React.Component {
     this.setState({ paintings: newPaintings })
   }
 
+  getFilteredPaintings = () =>
+    this.state.paintings.filter(painting =>
+      painting.title.toLowerCase().includes(this.props.searchTerm.toLowerCase())
+    )
+
   render () {
+    const filteredPaintings = this.getFilteredPaintings()
     return (
       <div className='ui four cards'>
-        {this.state.paintings.map(painting => (
+        {filteredPaintings.map(painting => (
           <Painting
             key={painting.id}
             painting={painting}
