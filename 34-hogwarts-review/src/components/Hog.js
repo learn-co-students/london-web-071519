@@ -21,7 +21,7 @@ class Hog extends React.Component {
           {hog.name} {hog.greased && '💦'}
         </h2>
         <img src={getHogImagePath(hog.name)} />
-        <p />
+        <p>Weight: {hog.weight}</p>
         {showDetails && <h3>Some more stuff</h3>}
       </div>
     )

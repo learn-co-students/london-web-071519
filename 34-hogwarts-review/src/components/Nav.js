@@ -1,7 +1,7 @@
 import piggy from '../porco.png'
 import React from 'react'
 
-const Nav = ({ toggleGreasedHogs }) => {
+const Nav = ({ toggleGreasedHogs, updateSortBy }) => {
   return (
     <div className='navWrapper'>
       <span className='headerText'>Hogwarts</span>
@@ -14,6 +14,14 @@ const Nav = ({ toggleGreasedHogs }) => {
       <div>
         <label>Show greased only:</label>
         <input onChange={toggleGreasedHogs} type='checkbox' />
+      </div>
+      <div>
+        <label>Sort by:</label>
+        <select onChange={updateSortBy}>
+          <option value=''>None</option>
+          <option value='name'>Name</option>
+          <option value='weight'>Weight</option>
+        </select>
       </div>
     </div>
   )
