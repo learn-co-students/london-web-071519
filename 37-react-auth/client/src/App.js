@@ -6,18 +6,38 @@ import SignInForm from './components/SignInForm'
 import Inventory from './components/Inventory'
 
 import './App.css'
+import API from './API'
 
 class App extends Component {
   state = {
     username: ''
   }
 
-  signIn = username => {
-    this.setState({ username })
+  signIn = user => {
+    this.setState({ username: user.username })
+    localStorage.setItem('token', user.token)
   }
 
   signOut = () => {
     this.setState({ username: '' })
+    localStorage.removeItem('token')
+  }
+
+  componentDidMount () {
+    if (localStorage.getItem('token') !== undefined) {
+      API.validate()
+        .then(data => {
+          if (data.error) {
+            throw Error(data.error)
+          } else {
+            this.signIn(data)
+            this.props.history.push('/inventory')
+          }
+        })
+        .catch(error => {
+          alert(error)
+        })
+    }
   }
 
   render () {

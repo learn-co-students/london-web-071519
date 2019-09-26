@@ -2,6 +2,8 @@ import React from 'react'
 
 import TextField from '@material-ui/core/TextField'
 import Button from '@material-ui/core/Button'
+import FormControl from '@material-ui/core/FormControl'
+
 import API from '../API'
 
 class SignInForm extends React.Component {
@@ -17,7 +19,7 @@ class SignInForm extends React.Component {
         if (data.error) {
           throw Error(data.error)
         } else {
-          this.props.signIn(data.username)
+          this.props.signIn(data)
           this.props.history.push('/inventory')
         }
       })
@@ -34,7 +36,7 @@ class SignInForm extends React.Component {
     const { handleChange, handleSubmit } = this
 
     return (
-      <div>
+      <FormControl>
         <TextField
           id='usernameInput'
           label='Username'
@@ -57,7 +59,7 @@ class SignInForm extends React.Component {
         <Button onClick={handleSubmit} variant='contained' color='primary'>
           SUBMIT
         </Button>
-      </div>
+      </FormControl>
     )
   }
 }
