@@ -2,6 +2,7 @@ class UsersController < ApplicationController
   def signin
     user = User.find_by(username: params[:username])
     if user and user.authenticate(params[:password])
+      cookies[:login] = { value: "XJ-122", expires: 1.hour.from_now }
       render json: { username: user.username, token: issue_token({ id: user.id }) }
     else
       render json: { error: 'Username/password combination invalid' }, status: 401
@@ -11,7 +12,7 @@ class UsersController < ApplicationController
   def validate
     user = get_current_user
     if user
-      render json: { username: user.username, token: issue_token({ id: user.id })  }
+      render json: { username: user.username, token: issue_token({ id: user.id }) }
     else
       render json: {error: 'Invalid token.'}, status: 401
     end

@@ -6,7 +6,8 @@ const inventoryUrl = baseUrl + '/inventory'
 const get = url =>
   fetch(url, {
     headers: {
-      Authorization: localStorage.getItem('token')
+      Authorization: localStorage.getItem('token'),
+      credentials: 'include'
     }
   }).then(resp => resp.json())
 
@@ -15,7 +16,8 @@ const post = (url, data) =>
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
-      Authorization: localStorage.getItem('token')
+      Authorization: localStorage.getItem('token'),
+      credentials: 'include'
     },
     body: JSON.stringify(data)
   }).then(resp => resp.json())
